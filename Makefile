@@ -10,7 +10,8 @@ libs    := -laria2
 all: $(SRC)/spm.cpp
 	cd lib/aria2 && autoreconf -i && ./configure ARIA2_STATIC=yes && make
 	mv lib/aria2/build/libaria2.so lib
-	$(CXX) $(CXX_FLAGS) -I$(INCLUDE) -L$(LIB) $^ -o spm $(libs)
+	mkdir build && $(CXX) $(CXX_FLAGS) -I$(INCLUDE) -L$(LIB) $^ -o spm $(libs) && mv spm build/
+
 
 clean:
-	-rm $(out)/*
+	-rm $(OUT)/*
