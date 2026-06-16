@@ -10,8 +10,6 @@
 
 namespace py = pybind11;
 
-int rv;
-
 int downloadEventCallback(aria2::Session* session, aria2::DownloadEvent event, aria2::A2Gid gid, void* userData)
 {
     switch (event) {
@@ -29,8 +27,10 @@ int downloadEventCallback(aria2::Session* session, aria2::DownloadEvent event, a
     return 0;
 }
 
-int callAria2(int uLen, char* uris[])
+int callAria2(const std::vector<std::string>& uris)
 {
+    int rv = 0;
+
     aria2::libraryInit();
     aria2::Session* session;
     aria2::SessionConfig config;
@@ -38,11 +38,12 @@ int callAria2(int uLen, char* uris[])
     config.downloadEventCallback = downloadEventCallback;
     session = aria2::sessionNew(aria2::KeyVals(), config);
 
-    for(int i = 1; i < uLen; ++i) {
+    for(size_t i = 0; i < uris.size(); ++i) {
+        std::vector<std::string> uri = {uris[i]};
         aria2::KeyVals options;
-        rv = aria2::addUri(session, nullptr, uris, options);
+        rv = aria2::addUri(session, nullptr, uri, options);
         if(rv < 0) {
-            std::cerr << "Failed to add download" << uris[0] << std::endl;
+            std::cerr << "Failed to add download" << uris[i] << std::endl;
         }
     }
 
@@ -59,8 +60,7 @@ int callAria2(int uLen, char* uris[])
 }
 
 PYBIND11_EMBEDDED_MODULE(aria, m) {
-    m.doc() = "Internal C++ module accessible inside Python";
-    m.def("call", &callAria2, "Calls libaria2", py::arg("a"), py::arg("b"));
+    m.def("call", &callAria2);
 }
 
 int main(int argc, char* argv[])
@@ -74,10 +74,17 @@ int main(int argc, char* argv[])
         import aria
 
         def f(argc, argv):
-            // aria.call()
+            pass
+            # aria.call()
 
     )", globals, globals);
 
-    globals["f"](argc, argv);
+    py::list py_argv;
+
+    for (int i = 0; i < argc; ++i) {
+        py_argv.append(argv[i]);
+    }
+
+    globals["f"](argc, py_argv);
 }
 
