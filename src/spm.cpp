@@ -1,10 +1,14 @@
+// built-in system libraries
 #include <string>
 #include <vector>
 #include <memory>
 #include <iostream>
 #include <stdexcept>
-
+// custom libraries
 #include <aria2/aria2.h>
+#include <pybind11/embed.h>
+
+namespace py = pybind11;
 
 int rv;
 
@@ -54,8 +58,26 @@ int callAria2(int uLen, char* uris[])
     return rv;
 }
 
+PYBIND11_EMBEDDED_MODULE(aria, m) {
+    m.doc() = "Internal C++ module accessible inside Python";
+    m.def("call", &callAria2, "Calls libaria2", py::arg("a"), py::arg("b"));
+}
+
 int main(int argc, char* argv[])
 {
-    // add py implementation
+    py::scoped_interpreter guard{};
+
+    py::dict globals = py::globals();
+
+    py::exec(R"(
+
+        import aria
+
+        def f(argc, argv):
+            // aria.call()
+
+    )", globals, globals);
+
+    globals["f"](argc, argv);
 }
 
