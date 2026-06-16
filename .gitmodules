@@ -1,0 +1,3 @@
+[submodule "lib/aria2"]
+	path = lib/aria2
+	url = https://github.com/aria2/aria2
