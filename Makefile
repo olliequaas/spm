@@ -1,15 +1,16 @@
 CXX       := g++
-CXX_FLAGS := -Wall -Wextra -std=c++11 -ggdb
+CXX_FLAGS := -std=c++11
 
 OUT     := build
 SRC     := src
 INCLUDE := include
 LIB     := lib
+libs    := -laria2
 
 all: $(SRC)/spm.cpp
-    cd lib/aria2 && autoreconf -i && ./configure ARIA2_STATIC=yes && make
-    mv lib/aria2/build/libaria2.so lib
-    $(CXX) $(CXX_FLAGS) -I$(INCLUDE) -L$(LIB) $^ -o spm
+	cd lib/aria2 && autoreconf -i && ./configure ARIA2_STATIC=yes && make
+	mv lib/aria2/build/libaria2.so lib
+	$(CXX) $(CXX_FLAGS) -I$(INCLUDE) -L$(LIB) $^ -o spm $(libs)
 
 clean:
-    -rm $(out)/*
+	-rm $(out)/*
