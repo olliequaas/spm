@@ -6,8 +6,6 @@
 
 #include <aria2/aria2.h>
 
-using json = nlohmann::json;
-
 int rv;
 
 int downloadEventCallback(aria2::Session* session, aria2::DownloadEvent event, aria2::A2Gid gid, void* userData)
