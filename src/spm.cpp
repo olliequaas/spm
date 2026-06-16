@@ -71,11 +71,12 @@ int main(int argc, char* argv[])
 
     py::exec(R"(
 
+        # PUT CODE HERE
         import aria
 
-        def f(argc, argv):
+        def f(argc, argv)
             pass
-            # aria.call()
+            # aria.call(uris)
 
     )", globals, globals);
 
