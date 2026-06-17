@@ -82,7 +82,7 @@ int main(int argc, char* argv[])
 
     py::list py_argv;
 
-    for (int i = 0; i < argc; ++i) {
+    for (int i = 1; i < argc; ++i) {
         py_argv.append(argv[i]);
     }
 
