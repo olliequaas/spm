@@ -10,7 +10,7 @@ libraries    := -laria2
 all: spm libaria2
 
 libaria2:
-	cd lib/aria2 && autoreconf -i && ./configure ARIA2_STATIC=yes && make
+	cd lib/aria2 && autoreconf -i && ./configure ARIA2_STATIC=yes && make clean && make
 	mv lib/aria2/build/libaria2.so lib
 
 spm: $(SRC)/spm.cpp
